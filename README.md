@@ -6,13 +6,15 @@ Although there are many tutorials in the internet, a tutorial explaining a reali
 
 We will be using the classic spring-petclinic app (https://github.com/spring-petclinic) to demo the setup using Nomad and Consul.
 
-This tutorial will include the following:
+This tutorial is made of two parts. Part 1 will include the following:
 1. Setup an Nginx server running on Nomad to serve html, js, images etc built using AngularJs. The Nginc server will have envoy as a sidecar for service mesh.
-2. Setup a springboot rest api running on Nomad. This workload will have envoy as a sidecar for service mesh.
+2. Setup a springboot rest api running on Nomad. This workload will have envoy as a sidecar for service mesh and mTLS.
 3. Setup an envoy ingress gateway to communicate with the web and rest services using mTLS and provide a way of internally load balancing the instances of web and rest services. 
 4. Setup a terminating gateway to route traffic outside the cluster
 5. Setup an PostgreSQL DB outside the Nomad cluster which gets traffic from the cluster via the terminating gateway.
 6. Setup Fabio to load balance the ingress gateways for HA.
+
+Part 2 shows a CD pipeline to deploy the api and webapp using Jenkins and Jfrog into the nomad cluster. 
 
 ## Pre-requisites
 
@@ -28,6 +30,10 @@ Setting up this on your local machine assumes the following pre-requisities:
 ## Why Vagrant?
 
 The idea behind this tutorial was to get something realistic working on your own desktop or laptop without needing to setup an environment in cloud. Vagrant provides a good way to create multiple nodes and play out the actual scenarios. That being said, this tutorial can easily be migrated to the cloud. Feel free to fork it or ping us to contribute on cloud specific tutorials.
+
+## What this tutorial is not?
+
+This is a tutorial created on top of a simple infrastructure using Vagrant (which is built primarily for dev use) and hence it is not secure for production use. Although we will be setting up mTLS for the service to service communication, there are many elements missing to make it completely secure. In the future, we will add certificates, Consul KV, Vault integration etc in the future release to show different aspects of securing the infrastructure as well. 
 ## Download the Repo first
 
 	git clone https://github.com/nairnavin/practical-nomad-consul.git
