@@ -40,7 +40,7 @@ This is a tutorial created on top of a simple infrastructure using Vagrant (whic
 
 ## Change the directory to the Repo folder
 
-	cd nomad-vagrant-lab
+	cd practical-nomad-consul
     vagrant up
 
 ## Quick check if everything works
