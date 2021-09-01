@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+
+    parameters { 
+      
+      string(name: 'ARTIFACT_ANGULAR', defaultValue: '', description: 'Angular Artifact for Nomad Jobs') 
+      string(name: 'ARTIFACT_REST', defaultValue: '', description: 'Rest Artifact for Nomad Jobs') 
+
+    }
+
+     environment {
+        ANGULAR_Artifact_ID = "${params.ARTIFACT_ANGULAR}"
+        REST_Artifact_ID = "${params.ARTIFACT_REST}"
+    }
+    stages {
+
+      // stage ('Download file') {
+      //       steps {
+      //           rtDownload (
+      //               serverId: "artifactory-server",
+      //               spec: """{
+      //                       "files": [
+      //                               {
+      //                                   "pattern": "Spring-Petclinic-Angular-Local/${params.ARTIFACT_ANGULAR}",
+      //                                   "target": "tmp/"
+      //                               }
+      //                           ]
+      //                       }"""
+      //           )
+      //       }
+      //   }
+
+      stage('TF Init&Plan') {
+        steps {
+          dir('pipeline-scripts') {
+          sh '''
+          echo $ANGULAR_Artifact_ID
+          terraform init
+          '''
+          script {
+            if (!params.ARTIFACT_ANGULAR.isEmpty()) {
+            sh 'terraform plan -var "angular-artifact-id=$ANGULAR_Artifact_ID" -target nomad_job.petclinic_web'
+
+                    }
+            else if (!params.ARTIFACT_REST.isEmpty()) {
+            sh 'terraform plan -var "rest-artifact-id=$REST_Artifact_ID" -target nomad_job.petclinic_api'
+
+                    }
+                  } 
+        }      
+        }
+      }
+
+
+      stage('Approval') {
+        steps {
+          script {
+            def userInput = input(id: 'confirm', message: 'Apply Terraform?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm'] ])
+          }
+        }
+      }
+
+      stage('TF Apply') {
+        steps {
+          dir('pipeline-scripts') {
+          script {
+            if (!params.ARTIFACT_ANGULAR.isEmpty()) {
+            sh 'terraform apply -var "angular-artifact-id=$ANGULAR_Artifact_ID" -target nomad_job.petclinic_web -input=false -auto-approve' 
+
+                    }
+            else if (!params.ARTIFACT_REST.isEmpty()) {
+            sh 'terraform apply -var "rest-artifact-id=$REST_Artifact_ID" -target nomad_job.petclinic_api -input=false -auto-approve'
+
+                    }
+                  } 
+        }
+        }
+      }
+    }
+}

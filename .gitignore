@@ -1,0 +1,10 @@
+.vagrant
+jobs/bak/
+#external-services/postgres.json
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+artifactory-data
+firewall/
+.DS_Store

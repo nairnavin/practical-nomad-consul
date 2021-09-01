@@ -1,0 +1,13 @@
+{
+  "Node": "postgres_node",
+  "Address": "10.0.2.2",
+  "NodeMeta": {
+    "external-node": "true",
+    "external-probe": "true"
+  },
+  "Service": {
+    "ID": "postgres",
+    "Service": "postgres",
+    "Port": 5432
+  }
+}
