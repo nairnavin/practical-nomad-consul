@@ -7,7 +7,10 @@ job "petclinic-web" {
   type = "service"
   group "petclinic-web" {
     count = 3
-
+    update {
+        canary       = 1
+        max_parallel = 1
+      }
     network {
       mode = "bridge"
       port "http" { to = 8080 }
