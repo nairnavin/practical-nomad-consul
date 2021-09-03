@@ -4,7 +4,7 @@
 
 Although there are many tutorials in the internet, a tutorial explaining a realistic multi-tier application working on Nomad and Consul is very rare. It took us a while to learn all the various pieces of the Nomad/Consul ecosystem and hope this tutorial helps the community to jump start their journey on the same.
 
-We will be using the classic spring-petclinic app (https://github.com/spring-petclinic) to demo the setup using Nomad and Consul.
+We will be using the classic [spring-petclinic app](https://github.com/spring-petclinic) to demo the setup using Nomad and Consul.
 
 This tutorial is made of two parts. Part 1 will include the following:
 1. Setup an Nginx server running on Nomad to serve html, js, images etc built using AngularJs. The Nginc server will have envoy as a sidecar for service mesh.
@@ -20,10 +20,10 @@ Part 2 shows a CD pipeline to deploy the api and webapp using Jenkins and Jfrog 
 
 Setting up this on your local machine assumes the following pre-requisities:
 
-- Hashicorp Vagrant installed on your local machine and available in your path
-- Oracle Virtualbox installed
-- git client installed
-- Docker is running in your laptop. For mac, Docker Desktop would be ideal.
+- [Hashicorp Vagrant](https://www.vagrantup.com/docs/installation) installed on your local machine and available in your path
+- [Oracle Virtualbox](https://www.virtualbox.org/wiki/Downloads) installed
+- [git client](https://github.com/git-guides/install-git) installed
+- [Docker](https://docs.docker.com/engine/install/) is running in your laptop. For mac, Docker Desktop would be ideal.
 
 *Not tested in Windows but should work as it is or with some minor tweaks*
 
