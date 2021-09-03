@@ -6,7 +6,7 @@ job "petclinic-web" {
   datacenters = ["dc1"]
   type = "service"
   group "petclinic-web" {
-    count = 2
+    count = 3
 
     network {
       mode = "bridge"

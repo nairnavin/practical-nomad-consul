@@ -1,6 +1,6 @@
 job "redis" {
   
-  datacenters = ["dc1"]
+  datacenters = ["BSD"]
 
   
   type = "service"
@@ -50,15 +50,16 @@ job "redis" {
         memory = 100 # 256MB
 
       }
-
+    }
       
       service {
         name = "redis-api"
         #tags = ["urlprefix-/redis" ]
-        port = "redis_port"
+        port = "6379"
         check {
           name     = "alive"
           type     = "tcp"
+          port = "redis_port"
           interval = "10s"
           timeout  = "2s"
         }
@@ -66,6 +67,6 @@ job "redis" {
 
      
 
-    }
+    
   }
 }
