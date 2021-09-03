@@ -1,6 +1,6 @@
 job "redis" {
   
-  datacenters = ["BSD"]
+  datacenters = ["dc1"]
 
   
   type = "service"
