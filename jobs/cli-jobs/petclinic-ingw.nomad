@@ -16,8 +16,8 @@ job "petclinic-ingw" {
         to     = 8090
       }  
       port "redis-inbound" {
-        static = 6379
-        to     = 6379
+        static = 6378
+        to     = 6378
       }      
     }
 
@@ -94,7 +94,7 @@ job "petclinic-ingw" {
       port = "redis-inbound"
 
       tags = [
-        "urlprefix-:6379", "proto=tcp"
+        "urlprefix-:6378", "proto=tcp"
       ]
       check {
           name     = "alive"
@@ -110,7 +110,7 @@ job "petclinic-ingw" {
           }
           ingress {
             listener {
-              port     = 6379
+              port     = 6378
               protocol = "tcp"
               service {
                 name = "redis-api"
