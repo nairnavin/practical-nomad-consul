@@ -42,7 +42,6 @@ job "petclinic-api" {
         jvm_options = ["-Xmx256m", "-Xms256m"]
       }
       artifact {
-        #source = "https://github.com/ManikandanS86/pet-clinic-artifactory/raw/master/spring-petclinic-rest-2.4.2.jar"
         source = "https://github.com/nairnavin/datasharing/raw/master/spring-petclinic-rest-2.4.2.jar"
         destination = "/tmp"
       }
@@ -51,7 +50,7 @@ job "petclinic-api" {
         memory = 300
       }
       env {
-        API_PORT = "9966" #"${NOMAD_PORT_api_port}"
+        API_PORT = "9966"
       }
     }
     restart {
