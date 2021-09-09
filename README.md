@@ -1,4 +1,4 @@
-# Set up a 3 Tier App using Nomad and Consul
+# Set up a multi-tier Tier App using Nomad and Consul
 
 ## Why this tutorial?
 
@@ -6,15 +6,20 @@ Although there are many tutorials in the internet, a tutorial explaining a reali
 
 We will be using the classic [spring-petclinic app](https://github.com/spring-petclinic) to demo the setup using Nomad and Consul.
 
-This tutorial is made of two parts. Part 1 will include the following:
+This tutorial is made of following parts. 
+
+Part 1 will include the following:
 1. Setup an Nginx server running on Nomad to serve html, js, images etc built using AngularJs. The Nginc server will have envoy as a sidecar for service mesh.
 2. Setup a springboot rest api running on Nomad. This workload will have envoy as a sidecar for service mesh and mTLS.
-3. Setup an envoy ingress gateway to communicate with the web and rest services using mTLS and provide a way of internally load balancing the instances of web and rest services. 
-4. Setup a terminating gateway to route traffic outside the cluster
-5. Setup an PostgreSQL DB outside the Nomad cluster which gets traffic from the cluster via the terminating gateway.
-6. Setup Fabio to load balance the ingress gateways for HA.
+3. Setup a terminating gateway to route traffic outside the cluster
+4. Setup an PostgreSQL DB outside the Nomad cluster which gets traffic from the cluster via the terminating gateway.
 
-Part 2 shows a CD pipeline to deploy the api and webapp using Jenkins and Jfrog into the nomad cluster. 
+Part 2 will include the following:
+1. Setup an envoy ingress gateway to communicate with the web and rest services using mTLS and provide a way of internally load balancing the instances of web and rest services. 
+2. Setup Fabio to load balance the ingress gateways for HA.
+3. Consul intentions
+
+Part 3 shows a CD pipeline to deploy the api and webapp using Jenkins and Jfrog into the nomad cluster. 
 
 ## Pre-requisites
 
@@ -55,6 +60,8 @@ To connect to the machine via ssh, use the vagrant ssh command:
 
 For simplicity, the server and clients are in the same subnet.
 
+# Part 1 - Run the multi-tier application using Nomad and Consul Connect
+
 ## Set up the PostgreSQL database in your local machine so that it simulates a DB outside the vagrant (nomad/consul) cluster
 ### 1. Run postgresql using docker
     docker run --name postgresdb -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=petclinic -p 5432:5432 -d postgres
@@ -80,14 +87,17 @@ If you have postgresql client in your laptop, you can use the following commands
     nomad job run jobs/cli-jobs/petclinic-api.nomad
     nomad job run jobs/cli-jobs/petclinic-web.nomad
 
-## Run the ingress gateways
-    nomad job run jobs/cli-jobs/petclinic-ingw.nomad
 
-With this, your nomad cluster should be up and running with 2 instances of ingress/terminating gateway and 2 instances of web and api services. To confirm everything works, you can point your browser to http://172.16.1.101:4646 for the nomad jobs and http://172.16.1.101:8500 for consul services. 
+With this, your nomad cluster should be up and running with 2 instances of terminating gateway and 2 instances of web and api services. To confirm everything works, you can point your browser to http://172.16.1.101:4646 for the nomad jobs and http://172.16.1.101:8500 for consul services. 
 
 ![image info](./images/nomad.png "Nomad jobs")
 
 ![image info](./images/consul.png "Services registered in Consul")
+
+# Part 2 - Make the services accessible outside the cluster
+
+## Run the ingress gateways
+    nomad job run jobs/cli-jobs/petclinic-ingw.nomad
 
 ## Lets setup Fabio as a load balancer for the ingress gateways
 
@@ -114,6 +124,10 @@ The petclinic api can be accessed via http://localhost:9999/petclinicapi/
 Consul connect provides for a service to service authn/authz using a combination of mTLS and consul intentions. You can read about intentions in the consul documentation. If you want to play around with intentions, you can set up something like the image below to ensure only specific services talk to each other and the default is deny all
 
 ![Consul intentions](./images/intentions.png "Consul intentions")
+
+
+# Part 3 - CD Pipeline to deploy the API and WebApp
+
 ## Install Jenkins to setup a pipeline
 
     cd jenkins-docker
