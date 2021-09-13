@@ -8,15 +8,12 @@ job "petclinic-ingw" {
     network {
       mode = "bridge"
       port "web-inbound" {
-        static = 8080
         to     = 8080
       }
       port "api-inbound" {
-        static = 8090
         to     = 8090
       }  
       port "redis-inbound" {
-        static = 6378
         to     = 6378
       }      
     }
