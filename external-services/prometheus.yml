@@ -17,3 +17,21 @@ scrape_configs:
     metrics_path: /v1/metrics
     params:
       format: ['prometheus']
+
+  - job_name: 'actuator'
+    metrics_path: /petclinicapi/actuator/prometheus
+    consul_sd_configs:
+    - server: '172.16.1.101:8500'
+      services: ['petclinic-api']
+    
+    relabel_configs:
+    - source_labels: ['__meta_consul_tags']
+      regex: ',addr:(.*),'
+      target_label: '__address__'
+      replacement: '$1'
+      action: replace
+
+    scrape_interval: 5s
+    params:
+      format: ['prometheus']
+    

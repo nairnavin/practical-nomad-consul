@@ -11,7 +11,7 @@ job "petclinic-api" {
     }
     service {
       name = "petclinic-api"
-      #tags = [ "urlprefix-/api" ]
+      tags = [ "addr:${NOMAD_HOST_ADDR_api_port}" ]
       port = "9966"
 
       connect {
@@ -28,7 +28,7 @@ job "petclinic-api" {
       check {
         type = "http"
         port = "api_port"
-        path = "/petclinicapi/swagger-ui.html"
+        path = "/petclinicapi/actuator/health"
         interval = "10s"
         timeout = "2s"
       }
@@ -38,11 +38,11 @@ job "petclinic-api" {
     task "petclinic-api" {
       driver = "java"
       config {
-        jar_path    = "/tmp/spring-petclinic-rest-2.4.2.jar"
+        jar_path    = "/tmp/spring-petclinic-rest-2.4.3.jar"
         jvm_options = ["-Xmx256m", "-Xms256m"]
       }
       artifact {
-        source = "https://github.com/nairnavin/datasharing/raw/master/spring-petclinic-rest-2.4.2.jar"
+        source = "https://github.com/nairnavin/datasharing/raw/master/spring-petclinic-rest-2.4.3.jar"
         destination = "/tmp"
       }
       resources {
