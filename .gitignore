@@ -8,3 +8,4 @@ jobs/bak/
 artifactory-data
 firewall/
 .DS_Store
+nomad-service.txt

@@ -1,0 +1,1 @@
+consul-template -template "template/nomad-service.txt.tpl:template/nomad-service.txt" -once
