@@ -6,8 +6,8 @@ job "petclinic-web" {
 
     network {
       mode = "bridge"
-      port "http" { to = 8080 }
     }
+
     service {
       name = "petclinic-web"
       #tags = [ "urlprefix-/web" ]
@@ -16,15 +16,8 @@ job "petclinic-web" {
       connect {
         sidecar_service {}
       }
-
-      check {
-        type = "http"
-        port = "http"
-        path = "/petclinic/index.html"
-        interval = "2s"
-        timeout  = "2s"
-      }
     }
+
     task "nginx" {
       driver = "docker"
       config {

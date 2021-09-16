@@ -45,7 +45,7 @@ job "petclinic-ingw" {
       check {
         type = "http"
         port = "api-inbound"
-        path = "/petclinicapi/swagger-ui.html"
+        path = "/petclinicapi/actuator/health"
         interval = "10s"
         timeout = "2s"
       }

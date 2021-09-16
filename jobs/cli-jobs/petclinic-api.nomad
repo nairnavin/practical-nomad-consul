@@ -5,9 +5,6 @@ job "petclinic-api" {
     count = 2
     network {
       mode = "bridge"
-      port "api_port" {
-        to = "9966"
-      }
     }
     service {
       name = "petclinic-api"
@@ -24,15 +21,6 @@ job "petclinic-api" {
           }
         }
       }
-
-      check {
-        type = "http"
-        port = "api_port"
-        path = "/petclinicapi/actuator/health"
-        interval = "10s"
-        timeout = "2s"
-      }
-
     }
 
     task "petclinic-api" {
