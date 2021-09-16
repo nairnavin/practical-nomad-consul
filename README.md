@@ -241,3 +241,17 @@ Like always, this tutorial stands on the shoulders for other brilliant people wh
 
 The authors may have referred & read many more articles and blogs during the research and we thank each one of them for sharing their learnings with us. Although there are too many to cite, we hope this tutorial is a way of honouring them and our contribution back to the community.
 
+## Consul KV Store 
+
+### Spring Boot way of changes
+
+Use this command to create key value in consul
+
+    consul kv import @consul-kv-store/secrets/properties.json
+
+Once key value is created in consul, restart your petclinic-api.nomad job. 
+
+Note: Please use consul-kv-store directory job file in case you want to fetch data from consul kv store.
+
+Incase you want to check the spring boot related changes, please refer here:
+https://github.com/sankita15/spring-petclinic-rest/blob/master/readme.md
