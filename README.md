@@ -243,7 +243,7 @@ The authors may have referred & read many more articles and blogs during the res
 
 ## Consul KV Store 
 
-### Spring Boot way of changes
+### Using Spring cloud & consul integration
 
 Use this command to create key value in consul
 
@@ -254,4 +254,4 @@ Once key value is created in consul, restart your petclinic-api.nomad job.
 Note: Please use consul-kv-store directory job file in case you want to fetch data from consul kv store.
 
 Incase you want to check the spring boot related changes, please refer here:
-https://github.com/sankita15/spring-petclinic-rest/blob/master/readme.md
+https://github.com/sankita15/spring-petclinic-rest
