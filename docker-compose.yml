@@ -19,17 +19,3 @@ services:
       - "9998:9998"
     volumes:
       - ./external-services/fabio.properties:/etc/fabio/fabio.properties
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./external-services/prometheus.yml:/etc/prometheus/prometheus.yml
-  grafana-dashboards:
-    image: grafana/grafana-enterprise:8.1.3-ubuntu
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./external-services/grafana/datasource-prometheus.yaml:/etc/grafana/provisioning/datasources/prometheus.yaml
-      - ./external-services/grafana/dashboard-provider.yaml:/etc/grafana/provisioning/dashboards/default.yaml
-      - ./external-services/grafana/dashboard.json:/var/lib/grafana/dashboards/main.json

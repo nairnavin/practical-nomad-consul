@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  grafana-dashboards:
+    image: grafana/grafana-enterprise:8.1.3-ubuntu
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/datasource-prometheus.yaml:/etc/grafana/provisioning/datasources/prometheus.yaml
+      - ./grafana/dashboard-provider.yaml:/etc/grafana/provisioning/dashboards/default.yaml
+      - ./grafana/dashboard.json:/var/lib/grafana/dashboards/main.json

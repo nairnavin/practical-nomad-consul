@@ -1,24 +1,31 @@
-job "petclinic-api" {
+job "api" {
   datacenters = ["dc1"]
   type = "service"
   
-  group "petclinic-api" {
+  group "api" {
     count = 2
     
     network {
       mode = "bridge"
-      port "api_port" {
-        to = "9966"
-      }
+      port "metrics" {}
     }
 
     service {
-      name = "petclinic-api"
+      name = "api"
+      tags = [ "addr:${NOMAD_HOST_ADDR_metrics}" ]
       port = "9966"
 
       connect {
         sidecar_service {
           proxy {
+            expose {
+              path {
+                path             =  "/petclinicapi/actuator/prometheus"
+                protocol         =  "http"
+                local_path_port  =  9966
+                listener_port    =  "metrics"
+              }
+            }
             upstreams {
               destination_name = "postgres"
               local_bind_port  = 6000
@@ -28,7 +35,7 @@ job "petclinic-api" {
       }
     }
 
-    task "petclinic-api" {
+    task "api" {
       driver = "java"
       config {
         jar_path    = "/tmp/spring-petclinic-rest-2.4.3.jar"
@@ -48,17 +55,17 @@ job "petclinic-api" {
     }
 
     scaling {
-      min     = 1
+      min     = 2
       max     = 4
       enabled = true
 
       policy {
-        evaluation_interval = "2s"
-        cooldown            = "2s"
+        evaluation_interval = "3s"
+        cooldown            = "10s"
 
         check "active_connections" {
           source = "prometheus"
-          query  = "nomad_client_allocs_cpu_total_percent{task='petclinic-api'}"
+          query  = "avg(nomad_client_allocs_cpu_total_percent{task='api'})"
 
           strategy "target-value" {
             target = 70

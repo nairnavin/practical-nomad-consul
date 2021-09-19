@@ -22,3 +22,7 @@ datacenter       = "dc1"
 encrypt = "1x0HW1jDNo+bLHlwsNGa+EguIW/0FK74HYfXC/ExNls="
 encrypt_verify_incoming = true
 encrypt_verify_outgoing = true
+
+telemetry {
+  prometheus_retention_time = "30s"
+}
