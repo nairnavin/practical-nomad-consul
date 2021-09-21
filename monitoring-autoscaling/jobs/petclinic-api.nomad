@@ -3,7 +3,7 @@ job "api" {
   type = "service"
   
   group "api" {
-    count = 2
+    count = 1
     
     network {
       mode = "bridge"
@@ -55,20 +55,20 @@ job "api" {
     }
 
     scaling {
-      min     = 2
+      min     = 1
       max     = 4
       enabled = true
 
       policy {
-        evaluation_interval = "3s"
-        cooldown            = "10s"
+        evaluation_interval = "2s"
+        cooldown            = "5s"
 
-        check "active_connections" {
+        check "cpu_usage" {
           source = "prometheus"
           query  = "avg(nomad_client_allocs_cpu_total_percent{task='api'})"
 
           strategy "target-value" {
-            target = 70
+            target = 50
           }
         }
       }
