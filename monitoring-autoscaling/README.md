@@ -32,6 +32,46 @@ Prometheus is available in `http://localhost:9999/`. In this exampe, we are goin
 docker-compose up -d
 ```
 
+## Autoscaling
+
+Nomad autoscaler plugin needs to be installed within the cluster as a Nomad job. Run the following command to provision the autoscaler,
+
+```
+nomad job run jobs/autoscaler.nomad
+```
+
+In this example, let's scale petclinic api based on CPU usage. Configure petclinic api nomad job with below scaling configuration.
+
+```
+    scaling {
+      min     = 1
+      max     = 4
+      enabled = true
+
+      policy {
+        evaluation_interval = "2s"
+        cooldown            = "5s"
+
+        check "cpu_usage" {
+          source = "prometheus"
+          query  = "avg(nomad_client_allocs_cpu_total_percent{task='api'})"
+
+          strategy "target-value" {
+            target = 50
+          }
+        }
+      }
+    }
+```
+
+The load can be simulated using below command and you can observe that the instances are getting scale out.
+
+```
+hey -z 1m -c 5 http://localhost:9999/petclinicapi/api/owners
+```
+
+Detailed information of how monitoring and autoscaling works is available below.
+
 # Monitoring
 
 The Nomad agent collects various runtime metrics about the performance of different libraries and subsystems. These metrics are aggregated on a ten second interval and are retained for one minute.
