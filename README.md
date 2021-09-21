@@ -348,7 +348,7 @@ telemetry {
 
 ## Prometheus
 
-Prometheus is used to scrape the metrics from the agents and store it in a time series database. Prometheus can be deployed into the cluster through a Nomad job. The job uses a Prometheus docker image. The job is located in [Prometheus Nomad Job](./prometheus.nomad).
+Prometheus is used to scrape the metrics from the agents and store it in a time series database. Prometheus can be deployed into the cluster through a Nomad job. The job uses a Prometheus docker image. The job is located in [Prometheus Nomad Job](./monitoring-autoscaling/prometheus.nomad).
 
 Prometheus has to be configured to scrap nomad metrics using the below configuration. Nomad agents expose an endpoint `/v1/metrics` for metrics scraping.
 
@@ -396,7 +396,7 @@ expose {
 
 This configuration spins up one more sidecar proxy with a random port named listener on host and allows only `/petclinicapi/actuator/prometheus` endpoint. All other endpoints would return 404.
 
-![Nomad expose metrics](nomad-expose-metrics.png "Nomad expose metrics")
+![Nomad expose metrics](./monitoring-autoscaling/nomad-expose-metrics.png "Nomad expose metrics")
 
 Now prometheus can be configured to scrape metrics from this endpoint. Since prometheus doesn't know the port of the metrics proxy, this has to be passed to prometheus somehow. This is where [Nomad environment variables](https://www.nomadproject.io/docs/runtime/interpolation#interpreted_env_vars) are really useful. The named ports are usually available in the environment variable `NOMAD_PORT_<label>`. In our case, it would be `NOMAD_PORT_metrics`. The instance might be running in any of the Nomad hosts, so IP is not constant. So we can use the variable `NOMAD_HOST_ADDR_metrics`, which has both IP and port. This value can be sent to Prometheus through service tag as below.
 
@@ -432,7 +432,7 @@ From prometheus configuration, this value can be extracted using the relabel con
 
 ### Access Promethues
 
-Prometheus can be accessed through Fabio load balancer. Fabio can be configured to run outside Nomad cluster using the docker compose file located [here](../../docker-compose.yml). Fabio automatically pick up the services as backend, whichever has the tag `urlprefix-`. The confid looks like below.
+Prometheus can be accessed through Fabio load balancer. Fabio can be configured to run outside Nomad cluster using the docker compose file located [here](./docker-compose.yml). Fabio automatically pick up the services as backend, whichever has the tag `urlprefix-`. The confid looks like below.
 
 ```
 service {
@@ -447,7 +447,7 @@ Now the prometheus can be access through http://localhost:9999/. Verify the Stat
 
 ## Grafana
 
-Once prometheus is configured to scrape metrics, Grafana can be used to create monitoring dashboards using the prometheus data. In this example, grafana is running outside the cluster and connect to prometheus server running inside the cluster. Grafana can be deployed using the docker compose file in this [location](./docker-compose.yml).
+Once prometheus is configured to scrape metrics, Grafana can be used to create monitoring dashboards using the prometheus data. In this example, grafana is running outside the cluster and connect to prometheus server running inside the cluster. Grafana can be deployed using the docker compose file in this [location](./monitoring-autoscaling/docker-compose.yml).
 
 Grafana has to be configured to talk to prometheus. The below configuration does that.
 
@@ -463,9 +463,9 @@ datasources:
       httpMethod: POST
 ```
 
-The daahboard configuration for Grafana is also available in the format of JSON [here](./grafana/dashboard.json). On accessing grafana at `http://localhost:3000/`, you will see something like below.
+The daahboard configuration for Grafana is also available in the format of JSON [here](./monitoring-autoscaling/grafana/dashboard.json). On accessing grafana at `http://localhost:3000/`, you will see something like below.
 
-![Grafana](./grafana.png)
+![Grafana](./monitoring-autoscaling/grafana.png)
 
 # Autoscaling
 
