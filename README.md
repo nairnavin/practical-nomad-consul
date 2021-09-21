@@ -233,7 +233,7 @@ Access the petclinic Web  using http://localhost:9999/petclinic/
 
 ## Consul KV Store 
 
-### Using Spring cloud & consul integration
+### 1. Using Spring cloud & consul integration
 
 Use this command to create key value in consul
 
@@ -243,8 +243,63 @@ Once key value is created in consul, restart your petclinic-api.nomad job.
 
 Note: Please use consul-kv-store directory job file in case you want to fetch data from consul kv store.
 
-Incase you want to check the spring boot related changes, please refer here:
-https://github.com/sankita15/spring-petclinic-rest
+Spring Boot Jar Changes: 
+
+Add spring-cloud-dependencies in the pom.xml
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2020.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+Add spring-cloud-starter-consul-config dependency in the pom.xml 
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-consul-config</artifactId>
+    </dependency>
+
+
+Add the below configuration in application.properties file
+
+    spring.application.name=consul_demo_api
+    spring.config.import=consul:localhost:8500
+    spring.cloud.consul.discovery.health-check-interval=15s
+    spring.cloud.consul.discovery.instance-id=random:8500
+
+Add @EnableDiscoveryClient annotation in the main java file., PetClinicApplication.java
+
+Add @RefreshScope annotation in the java file where @Value annotation is used so that on any key value change the 
+application refresh the value automatically.
+
+### 2. Using Envconsul to fetch configuration from consul kv store
+
+Use this command to create key value in consul
+
+    consul kv import @envconsul-kv-store/secrets/properties.json
+
+Once key value is created in consul, restart your petclinic-api.nomad job.
+
+    nomad job run envconsul-kv-store/jobs/petclinic-api.nomad
+
+For now, envconsul will fetch following configuration from kv store 
+    
+    server.port: 9966
+    server.servlet.context-path: /petclinicapi/
+    greeting: "JackAndJoe123"
+
+Note: 
+1. All the above configuration are present in properties.json file in base64 encrypted format.
+2. In this method no changes are required in JAR, other than removing configuration properties from JAR.
+3. This way of fetching key value from envconsul, will restart the spring application on any change in key value.
+We can use --once flag to disable this feature. This way envconsul will not listen any change in key value.
 
 # Part 4 - Monitoring & Autoscaling
 

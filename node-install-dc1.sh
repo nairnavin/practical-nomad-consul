@@ -84,5 +84,16 @@ echo "Java Install Beginning..."
 sudo apt install -y openjdk-8-jdk-headless
 echo "Java Installed Successfully"
 
+echo "Envconsul Install Beginning..."
+ENVCONSUL_VERSION="0.11.0"
+sudo curl -sSL https://releases.hashicorp.com/envconsul/${ENVCONSUL_VERSION}/envconsul_${ENVCONSUL_VERSION}_linux_386.zip > envconsul.zip
+if [ ! -d envconsul ]; then
+  sudo unzip /tmp/envconsul.zip
+fi
+if [ ! -f /usr/bin/envconsul ]; then
+  sudo install envconsul /usr/bin/envconsul
+fi
+echo "Envconsul Installed Successfully"
+
 sudo sh /vagrant/configure-cni.sh
 

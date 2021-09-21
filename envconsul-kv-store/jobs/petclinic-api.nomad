@@ -29,14 +29,25 @@ job "petclinic-api" {
     }
 
     task "petclinic-api" {
-      driver = "java"
+      driver = "exec"
       config {
-        jar_path    = "/tmp/spring-petclinic-rest-2.4.3.jar"
-        jvm_options = ["-Xmx256m", "-Xms256m"]
+        command = "envconsul"
+        args    = ["--config", "local/envconsul.hcl", "java", "-jar", "/tmp/spring-petclinic-rest-2.4.2.jar", "-Xms256M", "-Xmx256M", "--nogui;"]
       }
       artifact {
-        source = "https://github.com/nairnavin/datasharing/raw/master/spring-petclinic-rest-2.4.3.jar"
+        source = "https://github.com/sankita15/spring-petclinic-rest/raw/master/envconsul_jar/spring-petclinic-rest-2.4.2.jar"
         destination = "/tmp"
+      }
+      template {
+        data = <<EOH
+          consul {
+            address = "172.16.1.101:8500"
+          }
+          prefix {
+            path = "config2"
+          }
+        EOH
+        destination = "local/envconsul.hcl"
       }
       resources {
         cpu    = 500
