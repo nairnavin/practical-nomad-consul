@@ -1,18 +1,36 @@
 # How to
 
-Provision the VMs with Nomad and Consul installed using the Vagrantfile available in the root of the repository.
+Assuming the VMs are already provisioned using the Vagrantfile in the root and Nomad/Consul is installed and configured as explained in the README in the root directory. Following jobs can also be deployed as explained in the README, which make sure the petclinic application is running and can be accessed via `http://localhost:9999/petclinic/`.
+
+- petclinic-api
+- petclinic-web
+- petclinic-ingw
+- petclinic-egw
+
+## Monitoring
+
+For monitoring purpose, we are going to use Prometheus and it can be installed as a Nomad job within the cluster.
 
 ```
-vagrant up
+nomad job run jobs/prometheus.nomad
 ```
 
-Make sure to run the docker-compose file in the root to spin up the database and load balancer.
+This starts a prometheus server and this can accessed through the Fabio load balancer because of the `urlprefix` configuration in service tags.
 
 ```
-docker-compose up
+      service {
+        name = "prometheus"
+        port = "prometheus_ui"
+        tags = ["urlprefix-/"]
+        ...
+      }
 ```
 
-Run the script file `deploy-jobs.sh` in the folder `monitoring-autoscaling` to deploy the nomad jobs into cluster. Also run the docker-compose file in the same folder to run the grafana server.
+Prometheus is available in `http://localhost:9999/`. In this exampe, we are going to have Grafana outside ther cluster. Grafana is configured as docker container using docker compose. Run the following command within `monitoring-autoscaling` folder to spin up the grafana.
+
+```
+docker-compose up -d
+```
 
 # Monitoring
 
