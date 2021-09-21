@@ -230,16 +230,6 @@ Access the petclinic Web  using http://localhost:9999/petclinic/
 ### To destory all resources use
 
 	vagrant destroy
-## Credits
-
-Like always, this tutorial stands on the shoulders for other brilliant people who have shared their knowledge with the world. Calling out few of the main tutorials and content that was referred to during the creation of this tutorial
-
-- https://learn.hashicorp.com/nomad for tutorials and content on Hashicorp Nomad
-- https://learn.hashicorp.com/consul for tutorials and content on Hashicorp Consul
-- https://github.com/spring-petclinic for petclinic demo app
-- https://github.com/discoposse/nomad-vagrant-lab for the vagrant lab setup
-
-The authors may have referred & read many more articles and blogs during the research and we thank each one of them for sharing their learnings with us. Although there are too many to cite, we hope this tutorial is a way of honouring them and our contribution back to the community.
 
 ## Consul KV Store 
 
@@ -523,3 +513,14 @@ hey -z 1m -c 5 http://localhost:9999/petclinicapi/api/owners
 ```
 
 After running this command, you can observe the instance count in either Nomad or Grafana dashboard. The autoscaling configuration demonstrated here is for sample purpose and it might differ in real time based on the requirement.
+
+## Credits
+
+Like always, this tutorial stands on the shoulders for other brilliant people who have shared their knowledge with the world. Calling out few of the main tutorials and content that was referred to during the creation of this tutorial
+
+- https://learn.hashicorp.com/nomad for tutorials and content on Hashicorp Nomad
+- https://learn.hashicorp.com/consul for tutorials and content on Hashicorp Consul
+- https://github.com/spring-petclinic for petclinic demo app
+- https://github.com/discoposse/nomad-vagrant-lab for the vagrant lab setup
+
+The authors may have referred & read many more articles and blogs during the research and we thank each one of them for sharing their learnings with us. Although there are too many to cite, we hope this tutorial is a way of honouring them and our contribution back to the community.
