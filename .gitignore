@@ -9,3 +9,5 @@ artifactory-data
 firewall/
 .DS_Store
 nomad-service.txt
+start-redis-cluster.sh
+envoy_proxies.txt
