@@ -21,6 +21,12 @@ Part 2 will include the following:
 
 Part 3 shows a CD pipeline to deploy the api and webapp using Jenkins and Jfrog into the nomad cluster. 
 
+Part 4 is about Monitoring & Autoscaling using Prometheus & Grafana
+
+Part 5 shows how to use Consul KV store for managing application configurations 
+
+Part 6 shows setting up a HA rabbitmq cluster in nomad
+
 ## Pre-requisites
 
 Setting up this on your local machine assumes the following pre-requisities:
@@ -221,85 +227,6 @@ password: **Admin@123**
 
 
 Access the petclinic Web  using http://localhost:9999/petclinic/
-
-
-## Cleanup resources
-### To stop the machines, use
-    vagrant halt
-    
-### To destory all resources use
-
-	vagrant destroy
-
-## Consul KV Store 
-
-### 1. Using Spring cloud & consul integration
-
-Use this command to create key value in consul
-
-    consul kv import @consul-kv-store/secrets/properties.json
-
-Once key value is created in consul, restart your petclinic-api.nomad job. 
-
-Note: Please use consul-kv-store directory job file in case you want to fetch data from consul kv store.
-
-Spring Boot Jar Changes: 
-
-Add spring-cloud-dependencies in the pom.xml
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>2020.0.0</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-Add spring-cloud-starter-consul-config dependency in the pom.xml 
-
-    <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-starter-consul-config</artifactId>
-    </dependency>
-
-
-Add the below configuration in application.properties file
-
-    spring.application.name=consul_demo_api
-    spring.config.import=consul:localhost:8500
-    spring.cloud.consul.discovery.health-check-interval=15s
-    spring.cloud.consul.discovery.instance-id=random:8500
-
-Add @EnableDiscoveryClient annotation in the main java file., PetClinicApplication.java
-
-Add @RefreshScope annotation in the java file where @Value annotation is used so that on any key value change the 
-application refresh the value automatically.
-
-### 2. Using Envconsul to fetch configuration from consul kv store
-
-Use this command to create key value in consul
-
-    consul kv import @envconsul-kv-store/secrets/properties.json
-
-Once key value is created in consul, restart your petclinic-api.nomad job.
-
-    nomad job run envconsul-kv-store/jobs/petclinic-api.nomad
-
-For now, envconsul will fetch following configuration from kv store 
-    
-    server.port: 9966
-    server.servlet.context-path: /petclinicapi/
-    greeting: "JackAndJoe123"
-
-Note: 
-1. All the above configuration are present in properties.json file in base64 encrypted format.
-2. In this method no changes are required in JAR, other than removing configuration properties from JAR.
-3. This way of fetching key value from envconsul, will restart the spring application on any change in key value.
-We can use --once flag to disable this feature. This way envconsul will not listen any change in key value.
 
 # Part 4 - Monitoring & Autoscaling
 
@@ -569,6 +496,128 @@ hey -z 1m -c 5 http://localhost:9999/petclinicapi/api/owners
 
 After running this command, you can observe the instance count in either Nomad or Grafana dashboard. The autoscaling configuration demonstrated here is for sample purpose and it might differ in real time based on the requirement.
 
+## Part 5: Consul KV Store
+
+### 1. Using Spring cloud & consul integration
+
+Use this command to create key value in consul
+
+    consul kv import @consul-kv-store/secrets/properties.json
+
+Once key value is created in consul, restart your petclinic-api.nomad job.
+
+Note: Please use consul-kv-store directory job file in case you want to fetch data from consul kv store.
+
+Spring Boot Jar Changes:
+
+Add spring-cloud-dependencies in the pom.xml
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2020.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+Add spring-cloud-starter-consul-config dependency in the pom.xml
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-consul-config</artifactId>
+    </dependency>
+
+
+Add the below configuration in application.properties file
+
+    spring.application.name=consul_demo_api
+    spring.config.import=consul:localhost:8500
+    spring.cloud.consul.discovery.health-check-interval=15s
+    spring.cloud.consul.discovery.instance-id=random:8500
+
+Add @EnableDiscoveryClient annotation in the main java file., PetClinicApplication.java
+
+Add @RefreshScope annotation in the java file where @Value annotation is used so that on any key value change the
+application refresh the value automatically.
+
+### 2. Using Envconsul to fetch configuration from consul kv store
+
+Use this command to create key value in consul
+
+    consul kv import @envconsul-kv-store/secrets/properties.json
+
+Once key value is created in consul, restart your petclinic-api.nomad job.
+
+    nomad job run envconsul-kv-store/jobs/petclinic-api.nomad
+
+For now, envconsul will fetch following configuration from kv store
+
+    server.port: 9966
+    server.servlet.context-path: /petclinicapi/
+    greeting: "JackAndJoe123"
+
+Note:
+1. All the above configuration are present in properties.json file in base64 encrypted format.
+2. In this method no changes are required in JAR, other than removing configuration properties from JAR.
+3. This way of fetching key value from envconsul, will restart the spring application on any change in key value.
+   We can use --once flag to disable this feature. This way envconsul will not listen any change in key value.
+
+
+## Part 6 - Set up a HA RabbitMQ Cluster in Nomad
+
+#Create RabbitMQ Cluster: 
+    
+    nomad job run jobs/cli-jobs/rabbitmq.nomad
+
+This will run a 3 node rabbitmq cluster in host network mode with static port binding. 
+The state (including queues and messages) will be persisted on a host volume (/var/lib/rabbitmq/data) mounted into the nomad tasks. 
+The host volume `rabbit-data` is created from the nomad node configuration files -> `nomad-client-dc1.hcl` & `nomad-server-dc1.hcl`.
+
+#Setup Terminating Gateway:
+
+Register as external service in consul
+
+    /* SSH into server-dc1-1 */
+    > vagrant ssh server-dc1-1
+    /* Go to the /vagrant directory. */
+    > cd /vagrant
+    /* register services with consul */
+    > sh ./external-services/register-rabbitmq-svc.sh 
+
+deploy terminating gateway
+
+    nomad job run jobs/cli-jobs/petclinic-egw.nomad
+
+This is similar to how we accessed postgres (an external service) from pet-clinic-api (a service in our service mesh). 
+Even though rabbitmq is running within our nomad cluster, we need to treat it as an external service and access it via terminating gateway.   
+This is because rabbitmq is running in host mode and not part of the mesh. Running the rabbitmq cluster as part of the mesh is challenging since the rabbitmq peer discovery mechanism needs to discover other nodes of the cluster by hostname. 
+This is not possible within the mesh as all communications goes through consul connect sidecar proxy.  
+
+#Verify the cluster by going to the rabbitmq management UI:
+    
+    http://172.16.1.101:15672
+    http://172.16.1.102:15672
+    http://172.16.1.103:15672
+
+#Deploy rabbitmq client job:
+
+    nomad job run jobs/cli-jobs/rabbitmq-client.nomad
+
+This will deploy a simple springboot application that provides an api to push messages into the rabbitmq cluster. Source code is available [here](https://github.com/ManikandanS86/springboot-rabbitmq)
+Use the `GET /rabbitmq/produce?data=my-message-1` endpoint to push messages.
+
+## Cleanup resources
+### To stop the machines, use
+    vagrant halt
+    
+### To destory all resources use
+
+	vagrant destroy
+ 
 ## Credits
 
 Like always, this tutorial stands on the shoulders for other brilliant people who have shared their knowledge with the world. Calling out few of the main tutorials and content that was referred to during the creation of this tutorial

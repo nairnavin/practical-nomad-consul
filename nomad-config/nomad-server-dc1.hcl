@@ -28,6 +28,10 @@ client {
   enabled           = true
   network_interface = "eth1"
   servers           = ["172.16.1.101"]
+  host_volume "rabbit-data" {
+    path      = "/var/lib/rabbitmq/data"
+    read_only = false
+  }
 }
 
 consul {

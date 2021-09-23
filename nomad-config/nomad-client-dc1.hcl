@@ -32,6 +32,10 @@ client {
   #  #cidr = "12.13.14.15/32" 
   #  interface = "eth1"
   #}
+  host_volume "rabbit-data" {
+    path      = "/var/lib/rabbitmq/data"
+    read_only = false
+  }
 }
 
 consul {

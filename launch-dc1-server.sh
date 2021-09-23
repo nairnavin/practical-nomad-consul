@@ -17,5 +17,6 @@ retval=$?
 if [ $retval -eq 0 ]; then
   sudo killall nomad
 fi
+sudo mkdir -p /var/lib/rabbitmq/data
 sudo cp /vagrant/nomad-config/nomad-server-dc1.hcl /etc/nomad.d/nomad-server-dc1.hcl
 sudo nohup nomad agent -config /etc/nomad.d/nomad-server-dc1.hcl &>$HOME/nomad.log &

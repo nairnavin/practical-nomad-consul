@@ -1,15 +1,15 @@
-job "petclinic-egw" {
+job "egw" {
 
   datacenters = ["dc1"]
 
-  group "petclinic-egw" {
+  group "egw" {
     count = 2
     network {
       mode = "bridge"
     }
 
     service {
-      name = "petclinic-egw"
+      name = "egw"
 
       connect {
         gateway {
@@ -17,6 +17,9 @@ job "petclinic-egw" {
           terminating {
             service {
               name = "postgres"
+            }
+            service {
+              name = "rabbitmq-svc"
             }
           }
         }
