@@ -1,12 +1,13 @@
 job "redis-cluster" {
   datacenters = ["dc1"]
 
-  #affinity {
-    #attribute = "${attr.unique.hostname}"
-   # value     = "client-dc1-2"
-  #}
-  
+
   group "redis-0" {
+
+        affinity {
+    attribute = "${attr.unique.hostname}"
+    value     = "client-dc1-2"
+        }
 
     network {
       mode = "host"
@@ -35,6 +36,7 @@ job "redis-cluster" {
         data = <<EOF
 
 port {{ env "NOMAD_PORT_db"}}
+cluster-allow-reads-when-down yes
 ########################## CLUSTER DOCKER/NAT support  ########################
 
 # In certain deployments, Redis Cluster nodes address discovery fails, because
@@ -80,6 +82,10 @@ EOF
   }
 
   group "redis-1" {
+           affinity {
+    attribute = "${attr.unique.hostname}"
+    value     = "client-dc1-2"
+        }
 
     network {
       mode = "host"
@@ -108,6 +114,7 @@ EOF
         data = <<EOF
 
 port {{ env "NOMAD_PORT_db"}}
+cluster-allow-reads-when-down yes
 ########################## CLUSTER DOCKER/NAT support  ########################
 
 # In certain deployments, Redis Cluster nodes address discovery fails, because
@@ -154,6 +161,10 @@ EOF
 
 
  group "redis-2" {
+          affinity {
+    attribute = "${attr.unique.hostname}"
+    value     = "client-dc1-2"
+        }
 
     network {
       mode = "host"
@@ -182,6 +193,7 @@ EOF
         data = <<EOF
 
 port {{ env "NOMAD_PORT_db"}}
+cluster-allow-reads-when-down yes
 ########################## CLUSTER DOCKER/NAT support  ########################
 
 # In certain deployments, Redis Cluster nodes address discovery fails, because
@@ -227,6 +239,10 @@ EOF
   }
 
   group "redis-3" {
+           affinity {
+    attribute = "${attr.unique.hostname}"
+    value     = "client-dc1-3"
+        }
 
     network {
       mode = "host"
@@ -255,6 +271,7 @@ EOF
         data = <<EOF
 
 port {{ env "NOMAD_PORT_db"}}
+cluster-allow-reads-when-down yes
 ########################## CLUSTER DOCKER/NAT support  ########################
 
 # In certain deployments, Redis Cluster nodes address discovery fails, because
@@ -300,7 +317,10 @@ EOF
   }
 
   group "redis-4" {
-
+affinity {
+    attribute = "${attr.unique.hostname}"
+    value     = "client-dc1-3"
+        }
     network {
       mode = "host"
       port  "db"  {
@@ -328,6 +348,7 @@ EOF
         data = <<EOF
 
 port {{ env "NOMAD_PORT_db"}}
+cluster-allow-reads-when-down yes
 ########################## CLUSTER DOCKER/NAT support  ########################
 
 # In certain deployments, Redis Cluster nodes address discovery fails, because
@@ -374,7 +395,10 @@ EOF
 
 
  group "redis-5" {
-
+affinity {
+    attribute = "${attr.unique.hostname}"
+    value     = "client-dc1-3"
+        }
     network {
       mode = "host"
       port  "db"  {
@@ -402,6 +426,7 @@ EOF
         data = <<EOF
 
 port {{ env "NOMAD_PORT_db"}}
+cluster-allow-reads-when-down yes
 ########################## CLUSTER DOCKER/NAT support  ########################
 
 # In certain deployments, Redis Cluster nodes address discovery fails, because

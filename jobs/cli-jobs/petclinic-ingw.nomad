@@ -110,7 +110,7 @@ job "petclinic-ingw" {
               port     = 6378
               protocol = "tcp"
               service {
-                name = "redis-api"
+                name = "envoy-proxy"
               }
             }          
           }
