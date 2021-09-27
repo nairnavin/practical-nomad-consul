@@ -112,18 +112,16 @@ With this, your nomad cluster should be up and running with 2 instances of termi
     chmod +x launch-fabio-lb.sh
     ./launch-fabio-lb.sh
 
-## Alternatively all the external services can be run using below docker-compose command.
+## Docker Compose
+
+In addition to running these external services manually, these can also be run using below docker-compose command. Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration. 
 
 `docker-compose up`
 
 Docker compose runs below services with required configuration.
 
-- Postgres
+- Postgres Database
 - Fabio Load balancer
-- Prometheus
-- Grafana
-
-Prometheus is used to scrape the metrics from cluster and it can be reachable via `http://localhost:9090`. Grafana talks to Prometheus and render charts. Garfana is reachable at `http://localhost:3000`
 
 ## Time to check out the petclinic app running in Nomad cluster and using Consul connect for service mesh
 
