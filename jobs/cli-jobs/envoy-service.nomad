@@ -16,9 +16,9 @@ job "envoy-proxy" {
 
     network {
           mode = "bridge"
-         port "redis" {
+       /* port "redis" {
             to = 6578
-          }
+          } */
 
           port "admin" {
             to = 8002

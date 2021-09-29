@@ -21,6 +21,9 @@ job "egw" {
             service {
               name = "rabbitmq-svc"
             }
+            service {
+              name = "redis-svc"
+            }
           }
         }
       }

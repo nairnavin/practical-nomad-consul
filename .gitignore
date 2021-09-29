@@ -11,3 +11,4 @@ firewall/
 nomad-service.txt
 start-redis-cluster.sh
 envoy_proxies.txt
+service-register-redis.sh
