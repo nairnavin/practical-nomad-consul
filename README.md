@@ -13,19 +13,17 @@ This tutorial is made of following parts.
 2. Setup a springboot rest api running on Nomad. This workload will have envoy as a sidecar for service mesh and mTLS.
 3. Setup a terminating gateway to route traffic outside the cluster
 4. Setup an PostgreSQL DB outside the Nomad cluster which gets traffic from the cluster via the terminating gateway.
+5. Setup an envoy ingress gateway to communicate with the web and rest services using mTLS and provide a way of internally load balancing the instances of web and rest services. 
+6. Setup Fabio to load balance the ingress gateways for HA.
+7. Consul intentions
 
-[Part 2](#part-2) will include the following:
-1. Setup an envoy ingress gateway to communicate with the web and rest services using mTLS and provide a way of internally load balancing the instances of web and rest services. 
-2. Setup Fabio to load balance the ingress gateways for HA.
-3. Consul intentions
+[Part 2](#part-2) shows a CD pipeline to deploy the api and webapp using Jenkins and Jfrog into the nomad cluster. 
 
-[Part 3](#part-3) shows a CD pipeline to deploy the api and webapp using Jenkins and Jfrog into the nomad cluster. 
+[Part 3](#part-3) is about Monitoring & Autoscaling using Prometheus & Grafana
 
-[Part 4](#part-4) is about Monitoring & Autoscaling using Prometheus & Grafana
+[Part 4](#part-4) shows how to use Consul KV store for managing application configurations 
 
-[Part 5](#part-5) shows how to use Consul KV store for managing application configurations 
-
-[Part 6](#part-6) shows setting up a HA rabbitmq cluster in nomad
+[Part 5](#part-5) shows setting up a HA rabbitmq cluster in nomad
 
 ## Pre-requisites
 
@@ -101,7 +99,6 @@ With this, your nomad cluster should be up and running with 2 instances of termi
 
 ![image info](./images/consul.png "Services registered in Consul")
 
-<h2 id="part-2"><u>Part 2</u></h2>
 # Make the services accessible outside the cluster
 
 ## Run the ingress gateways
@@ -146,7 +143,7 @@ Consul connect provides for a service to service authn/authz using a combination
 ![Consul intentions](./images/intentions.png "Consul intentions")
 
 
-<h2 id="part-3"><u>Part 3</u></h2>
+<h2 id="part-2"><u>Part 2</u></h2>
 #  - CD Pipeline to deploy the API and WebApp
 
 ## Install Jenkins to setup a pipeline
@@ -229,7 +226,7 @@ password: **Admin@123**
 
 Access the petclinic Web  using http://localhost:9999/petclinic/
 
-<h2 id="part-4"><u>Part 4</u></h2>
+<h2 id="part-3"><u>Part 3</u></h2>
 #Monitoring & Autoscaling
 
 Assuming the VMs are already provisioned using the Vagrantfile in the root and Nomad/Consul is installed and configured as explained in the README in the root directory. Following jobs can also be deployed as explained in the README, which make sure the petclinic application is running and can be accessed via `http://localhost:9999/petclinic/`.
@@ -498,7 +495,7 @@ hey -z 1m -c 5 http://localhost:9999/petclinicapi/api/owners
 
 After running this command, you can observe the instance count in either Nomad or Grafana dashboard. The autoscaling configuration demonstrated here is for sample purpose and it might differ in real time based on the requirement.
 
-<h2 id="part-5"><u>Part 5</u></h2>
+<h2 id="part-4"><u>Part 4</u></h2>
 ## Consul KV Store
 
 ### 1. Using Spring cloud & consul integration
@@ -570,7 +567,7 @@ Note:
    We can use --once flag to disable this feature. This way envconsul will not listen any change in key value.
 
 
-<h2 id="part-6"><u>Part 6</u></h2>
+<h2 id="part-5"><u>Part 5</u></h2>
 ## Set up a HA RabbitMQ Cluster in Nomad
 
 #Create RabbitMQ Cluster: 
