@@ -534,7 +534,7 @@ Add spring-cloud-starter-consul-config dependency in the pom.xml
 
 Add the below configuration in application.properties file
 
-    spring.application.name=consul_demo_api
+    spring.application.name=consul_kv_demo
     spring.config.import=consul:localhost:8500
     spring.cloud.consul.discovery.health-check-interval=15s
     spring.cloud.consul.discovery.instance-id=random:8500

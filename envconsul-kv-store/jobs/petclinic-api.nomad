@@ -44,7 +44,7 @@ job "petclinic-api" {
             address = "172.16.1.101:8500"
           }
           prefix {
-            path = "config2"
+            path = "config/consul_kv_demo"
           }
         EOH
         destination = "local/envconsul.hcl"
