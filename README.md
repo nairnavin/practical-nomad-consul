@@ -572,7 +572,7 @@ Note:
 
 #Create RabbitMQ Cluster: 
     
-    nomad job run jobs/cli-jobs/rabbitmq.nomad
+    nomad job run rabbitmq/rabbitmq.nomad
 
 This will run a 3 node rabbitmq cluster in host network mode with static port binding. 
 The state (including queues and messages) will be persisted on a host volume (/var/lib/rabbitmq/data) mounted into the nomad tasks. 
@@ -587,11 +587,11 @@ Register as external service in consul
     /* Go to the /vagrant directory. */
     > cd /vagrant
     /* register services with consul */
-    > sh ./external-services/register-rabbitmq-svc.sh 
+    > sh ./rabbitmq/register-rabbitmq-svc.sh 
 
 deploy terminating gateway
 
-    nomad job run jobs/cli-jobs/petclinic-egw.nomad
+    nomad job run rabbitmq/rabbitmq-egw.nomad
 
 This is similar to how we accessed postgres (an external service) from pet-clinic-api (a service in our service mesh). 
 Even though rabbitmq is running within our nomad cluster, we need to treat it as an external service and access it via terminating gateway.   
@@ -606,7 +606,7 @@ This is not possible within the mesh as all communications goes through consul c
 
 #Deploy rabbitmq client job:
 
-    nomad job run jobs/cli-jobs/rabbitmq-client.nomad
+    nomad job run rabbitmq/rabbitmq-client.nomad
 
 This will deploy a simple springboot application that provides an api to push messages into the rabbitmq cluster. Source code is available [here](https://github.com/ManikandanS86/springboot-rabbitmq)
 Use the `GET /rabbitmq/produce?data=my-message-1` endpoint to push messages.

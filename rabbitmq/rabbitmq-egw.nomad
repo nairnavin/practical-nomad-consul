@@ -16,10 +16,7 @@ job "egw" {
           proxy {}
           terminating {
             service {
-              name = "postgres"
-            }
-            service {
-              name = "redis-svc"
+              name = "rabbitmq-svc"
             }
           }
         }
