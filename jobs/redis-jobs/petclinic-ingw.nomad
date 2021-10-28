@@ -86,6 +86,37 @@ job "petclinic-ingw" {
 
     }
 
+    service {
+      name = "redis-apigw"
+      port = "redis-inbound"
+
+      tags = [
+        "urlprefix-:6378", "proto=tcp"
+      ]
+      check {
+          name     = "alive"
+          type     = "tcp"
+          port = "redis-inbound"
+          interval = "10s"
+          timeout  = "2s"
+        }
+
+      connect {
+        gateway {
+          proxy {
+          }
+          ingress {
+            listener {
+              port     = 6378
+              protocol = "tcp"
+              service {
+                name = "envoy-proxy"
+              }
+            }          
+          }
+        }
+      }
+    }
 
 
   }
