@@ -12,10 +12,7 @@ job "petclinic-ingw" {
       }
       port "api-inbound" {
         to     = 8090
-      }  
-      port "redis-inbound" {
-        to     = 6378
-      }    
+      }     
     }
 
     service {
