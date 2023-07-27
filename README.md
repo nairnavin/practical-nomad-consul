@@ -34,7 +34,7 @@ Setting up this on your local machine assumes the following pre-requisities:
 - [git client](https://github.com/git-guides/install-git) installed
 - [Docker](https://docs.docker.com/engine/install/) is running in your laptop. For mac, Docker Desktop would be ideal.
 
-*Not tested in Windows but should work as it is or with some minor tweaks*
+*Not tested in Windows but should work as it is or with some minor tweaks. If there are strange errors like illegal format or file not format, please try to run unix2dos to convert the scripts and files to dos format *
 
 ## Why Vagrant?
 
